@@ -1,0 +1,64 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/fckeditor/plugins/linktonode
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+jscripts
+dir
+
+lang
+dir
+
+images
+dir
+
+css
+dir
+
+fck_linktonode.html
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+8024dd1fa54dbc2e6873ef3d94f0f6ef
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+fckplugin.js
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+99b239bb07846f566fefe4cd8a8b57ce
+2009-05-29T17:55:53.536546Z
+3
+michael
+

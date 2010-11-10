@@ -1,0 +1,247 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/date
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+date_api.js
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+047f6b1f45b6d9322b34c38ca129dc31
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+translations
+dir
+
+INSTALL.txt
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+99c65de49dc4fc6bf76f6e93fcb25e97
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_timezone
+dir
+
+help
+dir
+
+date_api.module
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+6ea8018791bd1b9ac3cc75653782359c
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_locale
+dir
+
+date_tools
+dir
+
+date_api_sql.inc
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+bbf6aff4f3dcf1195c543391779930e4
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_popup
+dir
+
+date_api.info
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+c980731735b305fcd52b9d24ff4bb167
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+LICENSE.txt
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+998ed0c116c0cebfcd9b2107b0d82973
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+theme
+dir
+
+tests
+dir
+
+date-rtl.css
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+8da8a122e407a7dd39ca4aba77cde266
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_api_formats_list.inc
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+7528d135de5e6af57581c28bbcc9546b
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date.css
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+f9c388963ba692c045e0efaf680fddeb
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+images
+dir
+
+date_api.admin.inc
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+d5b84d3ed36886acf751b77000d0fb49
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+CHANGELOG.txt
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+864994b757cc1e594450c3aacfa226f5
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+includes
+dir
+
+date_api_ical.inc
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+95ddd03aef6312cca2ddf6cd5e5d74fa
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_php4
+dir
+
+date_api_elements.inc
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+a07bf3f65ede9da5e19654bbc20e48da
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_api.install
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+6bd7c5fcf1b60b7965258315701c1c85
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+README.txt
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+37838a0a35dffbf156d21e49a4ae1194
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_repeat
+dir
+
+date
+dir
+

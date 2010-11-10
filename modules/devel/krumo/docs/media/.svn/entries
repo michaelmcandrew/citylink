@@ -1,0 +1,60 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/devel/krumo/docs/media
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+stylesheet.css
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+96cc9cfd4a69de8e63147ad31726ce76
+2009-05-29T17:55:53.536546Z
+3
+michael
+has-props
+
+images
+dir
+
+lib
+dir
+
+banner.css
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+f3459481fe2a80640c48845e65aa3ee3
+2009-05-29T17:55:53.536546Z
+3
+michael
+has-props
+

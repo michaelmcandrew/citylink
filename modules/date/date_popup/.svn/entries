@@ -1,0 +1,85 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/date/date_popup
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+translations
+dir
+
+date_popup.module
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+1f2846103f2d2e66a9af01ede87ab372
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+themes
+dir
+
+date_popup.install
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+9e09a681a7ef38e5363eccd1e0a4ebe1
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+lib
+dir
+
+date_popup.info
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+2bcf9ed2ee7f77696626f22c500b2401
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+date_popup.js
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+1d869c8fb8fdd615173f193d763c6769
+2009-05-29T17:55:53.536546Z
+3
+michael
+

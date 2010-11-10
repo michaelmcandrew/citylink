@@ -1,0 +1,52 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/taxonomy_manager/translations
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+fr.po
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+7285aa3f913a6ef258a55d817b43cea5
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+ja.po
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+c7466fa368c360b4a19ec6949c5d78db
+2009-05-29T17:55:53.536546Z
+3
+michael
+

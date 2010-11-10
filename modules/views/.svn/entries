@@ -1,0 +1,184 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/views
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+views.module
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+62e672fb75195c4250026b4723feb1d4
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+plugins
+dir
+
+translations
+dir
+
+views_ui.info
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+55e4633853cf829bfa03da25d5ca19c2
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+views.info
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+957c59e8951253e166ee74b22060a829
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+css
+dir
+
+docs
+dir
+
+help
+dir
+
+views_export
+dir
+
+handlers
+dir
+
+LICENSE.txt
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+998ed0c116c0cebfcd9b2107b0d82973
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+views2.doxy
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+347f28336301912468dc3ec04724912b
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+theme
+dir
+
+views.install
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+da2a59219507d4fd6036b7948ada7566
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+images
+dir
+
+CHANGELOG.txt
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+9ae856d09d4c113f280e276a2b0b751e
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+includes
+dir
+
+modules
+dir
+
+documentation-standards.txt
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+a9cf337cec37b6db20bd30d4a658991a
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+README.txt
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+504818f526c7570c0512842c30338de4
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+js
+dir
+
+views_ui.module
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+b9b2374109fadadfa4cd497190cc996f
+2009-05-29T17:55:53.536546Z
+3
+michael
+

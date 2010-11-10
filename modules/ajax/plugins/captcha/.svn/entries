@@ -1,0 +1,55 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/ajax/plugins/captcha
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+ajax_captcha.info
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+64b83a8b55a93de66016b8299effbcfd
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+patches
+dir
+
+ajax_captcha.module
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+727f21f96c5299c205f085da2a996762
+2009-05-29T17:55:53.536546Z
+3
+michael
+

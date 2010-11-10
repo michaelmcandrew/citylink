@@ -1,0 +1,82 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/cck/modules/nodereference
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+translations
+dir
+
+nodereference.rules.inc
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+c36124e3167d5859ff6cd3ed7881db6c
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+help
+dir
+
+nodereference.module
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+c0a804c5f70eef251a45a9d42833f28d
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+nodereference.install
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+acf11e06fb7f96bbfeaed5152e5f1147
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+nodereference.info
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+037281c574341b8cd260bd6aefc659df
+2009-05-29T17:55:53.536546Z
+3
+michael
+

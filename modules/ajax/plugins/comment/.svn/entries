@@ -1,0 +1,52 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/ajax/plugins/comment
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+ajax_comment.info
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+7d7f883960303483bdcc43755dc75834
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+ajax_comment.module
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+64cb09879d1767a236af70178b21193b
+2009-05-29T17:55:53.536546Z
+3
+michael
+

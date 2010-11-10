@@ -1,0 +1,52 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/drush/commands/pm/package_handler
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+cvs.inc
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+967003c0da89580f06b007e4e6dd070c
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+wget.inc
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+c2ae5c02d72b466cf656113d1dabb03d
+2009-05-29T17:55:53.536546Z
+3
+michael
+

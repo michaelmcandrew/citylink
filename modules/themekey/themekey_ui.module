@@ -1,0 +1,88 @@
+<?php
+// $Id: themekey_ui.module,v 1.2.2.3 2009/03/29 11:42:47 profix898 Exp $
+
+/**
+ * Implementation of hook_theme()
+ */
+function themekey_ui_theme() {
+  return array(
+    'themekey_ui_table' => array(
+      'arguments' => array('form' => NULL),
+    )
+  );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function themekey_ui_perm() {
+  return array('assign node themes');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function themekey_ui_menu() {
+  $items = array();
+  $items['admin/settings/themekey/settings/ui'] = array(
+    'title' => 'User Interface',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer themekey settings'),
+    'file' => 'themekey_ui_admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_themekey_ui_settings_form'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function themekey_ui_form_alter(&$form, $form_state, $form_id) {
+  // Node form
+  if (variable_get('themekey_ui_nodeform', 0) && user_access('assign node themes')) {
+    $type = isset($form['type']['#value']) ? $form['type']['#value'] : FALSE;
+    if ($form_id == $type .'_node_form' && variable_get('themekey_ui_nodeform|'. $type, 1)) {
+      require_once(drupal_get_path('module', 'themekey_ui') .'/themekey_ui_admin.inc');
+      _themekey_ui_nodeform($form, $form_state);
+    }
+  }
+  // Path aliases
+  if ($form_id == 'path_admin_form' && variable_get('themekey_ui_pathalias', 0)) {
+    require_once(drupal_get_path('module', 'themekey_ui') .'/themekey_ui_admin.inc');
+    _themekey_ui_pathalias($form, $form_state);
+  }
+  // Views
+  if ($form_id == 'views_ui_edit_display_form' && $form_state['#section'] == 'page-path'
+    && variable_get('themekey_ui_views', 0) && user_access('administer views')) {
+    require_once(drupal_get_path('module', 'themekey_ui') .'/themekey_ui_admin.inc');
+    _themekey_ui_views($form, $form_state);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function themekey_ui_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  if (variable_get('themekey_ui_nodeform', 0) && user_access('assign node themes')
+      && variable_get('themekey_ui_nodeform|'. $node->type, 1)) {
+    require_once(drupal_get_path('module', 'themekey_ui') .'/themekey_ui_admin.inc');
+    _themekey_ui_nodeapi($node, $op, $a3, $a4);
+  }
+}
+
+/**
+ * Function themekey_ui_form_submit().
+ */
+function themekey_ui_form_submit($form, &$form_state) {
+  if (isset($form_state['values']['themekey_submit'])) {
+    require_once(drupal_get_path('module', 'themekey_ui') .'/themekey_ui_admin.inc');
+    $handler = $form_state['values']['themekey_submit'];
+    if (function_exists($handler)) {
+      $handler($form, $form_state);
+    }
+  }
+}

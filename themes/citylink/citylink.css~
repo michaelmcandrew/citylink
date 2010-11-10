@@ -1,0 +1,33 @@
+#navbar-inner
+{
+	border-color:#8380C1;	
+}
+
+h1, h2, h3
+{
+	color: #005291;
+}
+
+a:link
+{
+	text-decoration: none;
+	color: #8380C1;
+}
+
+a:visited
+{
+	text-decoration: none;
+	color: #8380C1;
+}
+
+a:hover,
+a:focus
+{
+	color: #8380C1;
+}
+
+li a.active {
+	color: #005291;	
+}
+
+

@@ -1,0 +1,52 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/drush/commands/pm/update_info
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+drupal_5.inc
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+cacfc7128889a0438b7b8e98161464a0
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+drupal_6.inc
+file
+
+
+
+
+2009-06-19T14:42:54.000000Z
+983fb1390a985a2d7f6223e3e8208d77
+2009-05-29T17:55:53.536546Z
+3
+michael
+

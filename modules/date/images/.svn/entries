@@ -1,0 +1,54 @@
+8
+
+dir
+5
+svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/date/images
+svn://svn.thirdsectordesign.org/drupal
+
+
+
+2009-05-29T17:55:53.536546Z
+3
+michael
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
+
+ical16x16.gif
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+30dd6a7409793c6fb990ab48645ee2ca
+2009-05-29T17:55:53.536546Z
+3
+michael
+has-props
+
+calendar.png
+file
+
+
+
+
+2009-06-19T14:42:55.000000Z
+f06b853b7ee2423c0c4e7cb3474360c1
+2009-05-29T17:55:53.536546Z
+3
+michael
+has-props
+
