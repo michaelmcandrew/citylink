@@ -1,103 +1,0 @@
-8
-
-dir
-5
-svn://svn.thirdsectordesign.org/drupal/6/trunk/sites/all/modules/imce
-svn://svn.thirdsectordesign.org/drupal
-
-
-
-2009-05-29T17:55:53.536546Z
-3
-michael
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-9ef6a49a-83d4-4be1-b0dc-9cbceb758f28
-
-tpl
-dir
-
-LICENSE.txt
-file
-
-
-
-
-2009-06-19T14:42:55.000000Z
-998ed0c116c0cebfcd9b2107b0d82973
-2009-05-29T17:55:53.536546Z
-3
-michael
-
-translations
-dir
-
-imce.module
-file
-
-
-
-
-2009-06-19T14:42:55.000000Z
-3c626ccd22eb0c93aea5ffd7e0614dc5
-2009-05-29T17:55:53.536546Z
-3
-michael
-
-imce.install
-file
-
-
-
-
-2009-06-19T14:42:55.000000Z
-38dc00caeb0ec4d2c91ccd6983a7a0f0
-2009-05-29T17:55:53.536546Z
-3
-michael
-
-imce.info
-file
-
-
-
-
-2009-06-19T14:42:55.000000Z
-9078a3508a7eb7cf339d5f22999d75d9
-2009-05-29T17:55:53.536546Z
-3
-michael
-
-css
-dir
-
-inc
-dir
-
-README.txt
-file
-
-
-
-
-2009-06-19T14:42:55.000000Z
-6ab0a78d83784d0f60d887d9948a9700
-2009-05-29T17:55:53.536546Z
-3
-michael
-
-js
-dir
-
