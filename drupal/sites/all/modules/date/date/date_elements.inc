@@ -1,5 +1,5 @@
 <?php
-//$Id: date_elements.inc,v 1.46.2.2.2.62 2009/05/14 14:58:04 karens Exp $
+//$Id: date_elements.inc,v 1.46.2.2.2.70 2010/12/29 14:11:50 karens Exp $
 /**
  * @file
  * Date forms and form themes and validation.
@@ -47,22 +47,13 @@ function _date_field_update($op, &$node, $field, &$items, $teaser, $page) {
     //$node->$field_name = array(); // Not sure about this, CCK should handle it.
     return;
   }
-  $format = $field['type'] == DATE_ISO ? DATE_FORMAT_ISO : DATE_FORMAT_UNIX;
-  $timezone = date_get_timezone($field['tz_handling'], array_key_exists('timezone', $items[0]) ? $items[0]['timezone'] : '');
-  $db_info = content_database_info($field);
-  $columns = array_keys($db_info['columns']);
 
   $values = $items;
   foreach ($values as $delta => $item) {
-    // Don't save empty values.
-    if (empty($item['value']) && $delta !== 0) {
-      unset($items[$delta]);
-      continue;
-    }
 
     // Special case for ISO dates which may have been given artificial values for
     // some date parts to make them into valid dates.
-    if ($field['type'] == DATE_ISO) {
+    if (!empty($item['value']) && $field['type'] == DATE_ISO) {
       $items[$delta]['value'] = date_limit_value($items[$delta]['value'], date_granularity($field), $field['type']);
       if ($field['todate']) {
         $items[$delta]['value2'] = date_limit_value($items[$delta]['value2'], date_granularity($field), $field['type']);
@@ -261,7 +252,7 @@ function _date_elements() {
  */
 function date_combo_process($element, $edit, &$form_state, $form) {
   if (isset($element['#access']) && empty($element['#access'])) {
-    return;
+    return $element;
   }
 
   $field_name = $element['#field_name'];
@@ -288,7 +279,6 @@ function date_combo_process($element, $edit, &$form_state, $form) {
     '#weight'        => $field['widget']['weight'],
     '#required'      => ($field['required'] && $delta == 0) ? 1 : 0,
     '#default_value' => isset($element['#value'][$from_field]) ? $element['#value'][$from_field] : '',
-    '#field'         => $field,
     '#delta'         => $delta,
     '#date_timezone' => $element['#date_timezone'],
     '#date_format'      => date_limit_format(date_input_format($element, $field), $field['granularity']),
@@ -444,8 +434,8 @@ function date_combo_validate($element, &$form_state) {
       $merged_date = array();
       $to_date_empty = TRUE;
       foreach ($posted[$to_field] as $part => $value) {
-        $to_date_empty = $to_date_empty && empty($value);
-        $merged_date[$part] = empty($value) ? $posted[$from_field][$part] : $value;
+        $to_date_empty = $to_date_empty && empty($value) && !is_numeric($value);
+        $merged_date[$part] = empty($value) && !is_numeric($value) ? $posted[$from_field][$part] : $value;
         if ($part == 'ampm' && $merged_date['ampm'] == 'pm' && $merged_date['hour'] < 12) {
           $merged_date['hour'] += 12;
         }
@@ -543,14 +533,11 @@ function date_combo_validate($element, &$form_state) {
  * Handle widget processing.
  */
 function date_widget_validate($element, &$form_state) {
-  $form_values = $form_state['values'];
-  $field_name = $element['#field_name'];
-  $fields = content_fields();
   $field = $form_state['#field_info'][$element['#field_name']];
-  if (module_exists('date_repeat') && array_key_exists('rrule', $form_values[$field_name])) {
-    require_once('./'. drupal_get_path('module', 'date') .'/date_repeat.inc');
+  if (module_exists('date_repeat') && $field['repeat'] == 1) {
+    module_load_include('inc', 'date', 'date_repeat');
     return _date_repeat_widget_validate($element, $form_state);
-  }
+  }  
 }
 
 /**
@@ -570,15 +557,14 @@ function date_input_format($element, $field) {
  *  Theme from/to date combination on form.
  */
 function theme_date_combo($element) {
-  $fields = content_fields();
-  $field = $fields[$element['#field_name']];
+  $field = content_fields($element['#field_name'], $element['#type_name']);
   if (!$field['todate']) {
     return $element['#children'];
   }
   
   // Group from/to items together in fieldset.
   $fieldset = array(
-    '#title' => t($field['widget']['label']) .' '. ($element['#delta'] > 0 ? intval($element['#delta'] + 1) : ''),
+    '#title' => check_plain($field['widget']['label']) .' '. ($element['#delta'] > 0 ? intval($element['#delta'] + 1) : ''),
     '#value' => $element['#children'],
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,

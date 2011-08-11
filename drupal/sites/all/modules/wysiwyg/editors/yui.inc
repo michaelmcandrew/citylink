@@ -1,5 +1,4 @@
 <?php
-// $Id: yui.inc,v 1.5 2009/06/09 00:18:12 sun Exp $
 
 /**
  * @file
@@ -66,10 +65,13 @@ function wysiwyg_yui_editor() {
  */
 function wysiwyg_yui_version($editor) {
   $library = $editor['library path'] . '/editor/editor.js';
+  if (!file_exists($library)) {
+    return;
+  }
   $library = fopen($library, 'r');
   $max_lines = 10;
   while ($max_lines && $line = fgets($library, 60)) {
-    if (preg_match('@version:\s([0-9\.]+)$@', $line, $version)) {
+    if (preg_match('@version:\s([0-9\.]+)@', $line, $version)) {
       fclose($library);
       return $version[1];
     }
@@ -141,14 +143,15 @@ function wysiwyg_yui_settings($editor, $config, $theme) {
     $settings['autoHeight'] = TRUE;
   }
 
-  if (isset($config['buttons'])) {
-    $settings += array(
-      'toolbar' => array(
-        'collapse' => FALSE,
-        'draggable' => TRUE,
-        'buttonType' => 'advanced',
-      ),
-    );
+  $settings += array(
+    'toolbar' => array(
+      'collapse' => FALSE,
+      'draggable' => TRUE,
+      'buttonType' => 'advanced',
+      'buttons' => array(),
+    ),
+  );
+  if (!empty($config['buttons'])) {
     $buttons = array();
     foreach ($config['buttons'] as $plugin => $enabled_buttons) {
       foreach ($enabled_buttons as $button => $enabled) {

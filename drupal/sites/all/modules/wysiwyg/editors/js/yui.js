@@ -1,4 +1,4 @@
-// $Id: yui.js,v 1.1 2008/12/08 18:58:09 sun Exp $
+(function($) {
 
 /**
  * Attach this editor to a target element.
@@ -20,7 +20,6 @@ Drupal.wysiwyg.editor.detach.yui = function(context, params) {
   if (typeof params != 'undefined') {
     var instance = YAHOO.widget.EditorInfo.getEditorById(params.field);
     if (instance) {
-      instance.saveHTML();
       instance.destroy();
     }
   }
@@ -28,11 +27,9 @@ Drupal.wysiwyg.editor.detach.yui = function(context, params) {
     for (var e in YAHOO.widget.EditorInfo._instances) {
       // Save contents of all editors back into textareas.
       var instance = YAHOO.widget.EditorInfo._instances[e];
-      instance.saveHTML();
       instance.destroy();
-      // Remove all editor instances.
-      //nicEditors.editors[e].nicInstances = [];
     }
   }
 };
 
+})(jQuery);

@@ -1,5 +1,5 @@
 <?php
-// $Id: date_api_filter_handler.inc,v 1.1.2.38 2009/05/12 13:38:28 karens Exp $
+// $Id: date_api_filter_handler.inc,v 1.1.2.52 2010/12/28 15:32:56 karens Exp $
 
 /**
  * A flexible, configurable date filter.
@@ -31,6 +31,8 @@ class date_api_filter_handler extends views_handler_filter_numeric {
     $handler->granularity = isset($options['granularity']) ? $options['granularity'] : 'day';
     $handler->adjustment_field = isset($options['adjustment_field']) ? $options['adjustment_field'] : 0;
     
+    if (empty($this->view->date_info)) $this->view->date_info = new stdClass();
+    
     // Set the view range, do this only if not already set in case there are multiple date arguments.
     if (empty($this->view->date_info->min_allowed_year)) {
       $range = date_range_years($this->options['year_range']);
@@ -50,22 +52,19 @@ class date_api_filter_handler extends views_handler_filter_numeric {
     if (empty($this->options['exposed']) || (isset($this->options['expose']['identifier']) && !isset($_GET[$this->options['expose']['identifier']]))) {
       $this->force_value = TRUE;
     }
+
   }
 
   // Set default values for the date filter.
-  function options(&$options) {
-    parent::options($options);
-    $options['date_fields'] = array();
-    $options['date_method'] = 'OR';
-    $options['granularity'] = 'day';
-    $options['form_type'] = 'date_select';
-    $options['default_date'] = '';
-    $options['default_to_date'] = '';
-    $options['year_range'] = '-3:+3';    
-  }
-  
   function option_definition() {
     $options = parent::option_definition();
+    $options['date_fields'] = array('default' => array());
+    $options['date_method'] = array('default' => 'OR');
+    $options['granularity'] = array('default' => 'day');
+    $options['form_type'] = array('default' => 'date_select');
+    $options['default_date'] = array('default' => '');
+    $options['default_to_date'] = array('default' => '');
+    $options['year_range'] = array('default' => '-3:+3');
     return $options;
   }
 
@@ -125,6 +124,12 @@ class date_api_filter_handler extends views_handler_filter_numeric {
     foreach ($fields['name'] as $name => $field) {
       $options[$name] = $field['label'];
     }
+    
+    // If this filter was added as a CCK field filter and no other date field
+    // has been chosen, update the default with the right date.
+    if (empty($this->options['date_fields']) && $this->field != 'date_filter') {
+      $this->options['date_fields'] = array($this->table .'.'. $this->field);
+    }
     $form['date_fields'] = array(
       '#title' => t('Date field(s)'),
       '#type' => 'checkboxes',
@@ -147,9 +152,8 @@ class date_api_filter_handler extends views_handler_filter_numeric {
     if (empty($check_fields)) {
       form_error($form['date_fields'], t('You must select at least one date field for this filter.'));
     }
-    if (!preg_match('@\-[0-9]*:[\+|\-][0-9]*@', $form_state['values']['options']['year_range']) 
-      && !preg_match('@[0-9]{4}:[0-9]{4}@', $form_state['values']['options']['year_range'])) {
-      form_error($form['year_range'], t('Date year range must be in the format -9:+9 or 2005:2010.'));
+    if (!preg_match('/^(?:\-[0-9]{1,4}|[0-9]{4}):(?:[\+|\-][0-9]{1,4}|[0-9]{4})$/', $form_state['values']['options']['year_range'])) {
+      form_error($form['year_range'], t('Date year range must be in the format -9:+9, 2005:2010, -9:2010, or 2005:+9'));
     }
   }
   
@@ -204,12 +208,17 @@ class date_api_filter_handler extends views_handler_filter_numeric {
       }
     }
     
+    // Add some text to make it clear when additional options are available.
+    $extra = '';
+    if (version_compare(PHP_VERSION, '5.2', '>=')) {
+      $extra = t(" You can use any values PHP's date_create() can understand, like between '12AM today' and '12AM tomorrow.");
+    }
     $form['value']['value']['#prefix'] = '<div class="form-item"><label>' . t('Absolute value') . '</label></div>';
     $form['value']['default_date'] = array(
       '#type' => 'textfield',
       '#title' => t('Date default'),
       '#default_value' => $this->options['default_date'],
-      '#prefix' => '<div class="form-item"><label>' . t('Relative value') . '</label><p>' . t("Relative values will be used if no date is set above. Use 'now' to default to the current date at runtime or add modifiers like 'now +1 day'. The To date default value is used when the operator is set to 'between' or 'not between'.") .'</p><p>' . t('If the filter is exposed, these values will be used to set the inital value of the exposed filter. Leave both date and default values blank to start with no value in the exposed filter.') .'</p></div>',
+      '#prefix' => '<div class="form-item"><label>' . t('Relative value') . '</label><p>' . t("Relative values will be used if no date is set above. Use 'now' to default to the current date at runtime or add modifiers like 'now +1 day'. The To date default value is used when the operator is set to 'between' or 'not between'.") . $extra .'</p><p>' . t('If the filter is exposed, these values will be used to set the inital value of the exposed filter. Leave both date and default values blank to start with no value in the exposed filter.') .'</p></div>',
       );
     $form['value']['default_to_date'] = array(
       '#type' => 'textfield',
@@ -275,6 +284,7 @@ class date_api_filter_handler extends views_handler_filter_numeric {
     if (!empty($form_state['exposed'])) {
       $default_date = $this->default_value($prefix);
     }
+   
     $form[$prefix] = array(
       '#type' => $type,
       '#title' => $name,
@@ -302,9 +312,14 @@ class date_api_filter_handler extends views_handler_filter_numeric {
     // This is a date that needs to be constructed from options like 'now'.
     $default_option = $prefix == 'max' ? $options['default_to_date'] : $options['default_date'];
     if (!empty($default_option)) {
-      $date = date_now();
-      if ($add = trim(str_replace('now', '', $default_option))) {
-        date_modify($date, $add);
+      // For PHP 5.2+, take advantage of any strings that native PHP 
+      // date_create() can handle. For older versions use strtotime().
+      if (version_compare(PHP_VERSION, '5.2', '<')) {
+        $now = strtotime($default_option .' UTC');
+        $date = date_create("@$now", timezone_open('UTC'));
+      }
+      else {
+        $date = date_create($default_option, date_default_timezone());
       }
       $default_date = date_format($date, DATE_FORMAT_DATETIME);
     }
@@ -354,10 +369,9 @@ class date_api_filter_handler extends views_handler_filter_numeric {
         }
       }
     }
-    $field = implode('<br />'. $this->options['date_method'] .' ', $output);
+    $field = implode(' '. $this->options['date_method'] .' ', $output);
     $output = "$field ". check_plain($this->operator) . ' ';
     $parts = $handler->date_parts();
-    
     $widget_options = $this->widget_options();
     // If the filter is exposed, display the granularity.
     if ($this->options['exposed']) {
@@ -391,15 +405,35 @@ class date_api_filter_handler extends views_handler_filter_numeric {
   }
    
   /**
+   * Called just prior to query(), this lets us set up table aliases for
+   * relationships. This can't be done in pre_query(), because the relationship
+   * isn't defined yet.
+   */
+  function set_relationship() {
+    parent::set_relationship();
+    $this->get_query_fields();
+    if (!empty($this->relationship)) {
+      if (!empty($this->query_fields)) {
+        foreach ($this->query_fields as $query_field) {
+          $field = $query_field['field'];
+          $this->related_table_alias = $this->query->queue_table($field['table_name'], $this->relationship);
+        }
+      }
+    }
+  }
+ 
+  /**
    * Custom implementation of query() so we can get the
    * AND and OR methods in the right places.
    */
   function query() {
-    $this->ensure_my_table();
     $this->get_query_fields();
     if (!empty($this->query_fields)) {
       foreach ((array) $this->query_fields as $query_field) {
         $field = $query_field['field'];
+        $table_alias = !empty($this->related_table_alias) ? $this->related_table_alias : $field['table_name'];
+        $query_field['field']['fullname'] = $table_alias .'.'. $query_field['field']['field_name'];
+        
         $sql = '';
         $sql_parts = array();
         switch ($this->operator) {
@@ -429,6 +463,7 @@ class date_api_filter_handler extends views_handler_filter_numeric {
   
   function date_filter($prefix, $query_field, $operator) {
     $field = $query_field['field'];
+    
     // Handle the simple operators first.
     if ($operator == 'empty') {
       $this->add_date_field($field);
@@ -509,6 +544,7 @@ class date_api_filter_handler extends views_handler_filter_numeric {
         $value = date_format($date, $this->format);
         break;
     }
+    
     if ($this->date_handler->granularity != 'week') {
       $sql = $date_handler->sql_where_format($this->format, $field['fullname'], $operator, $value);
     }

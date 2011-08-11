@@ -1,5 +1,5 @@
 <?php
-//$Id: date_api_elements.inc,v 1.49.2.1.2.50 2009/05/11 02:23:56 karens Exp $
+//$Id: date_api_elements.inc,v 1.49.2.1.2.59 2010/12/29 14:11:50 karens Exp $
 /**
  * @file
  * Date API elements themes and validation.
@@ -132,21 +132,22 @@ function date_text_process($element, $edit, $form_state, $form) {
   $date = NULL;
   $granularity = date_format_order($element['#date_format']);
   
-  if (!empty($edit) && !empty($edit['date'])) {
+  // We sometimes get $edit without $edit['date'] from
+  // Views exposed filters.
+  if (!empty($edit) && is_array($edit) && !empty($edit['date'])) {
     $datetime = date_convert_from_custom($edit['date'], $element['#date_format']);
     $date = date_make_date($datetime, $element['#date_timezone'], DATE_DATETIME, $granularity);
   }
   elseif (!empty($element['#value'])) {
     $date = date_make_date($element['#value'], $element['#date_timezone'], DATE_DATETIME, $granularity);
   }
-  
   $element['#tree'] = TRUE;
 
   $element['date']['#type'] = 'textfield';
   $element['date']['#weight'] = !empty($element['date']['#weight']) ? $element['date']['#weight'] : $element['#weight'];
-  $element['date']['#default_value'] = is_object($date) ? date_format($date , $element['#date_format']) : '';
+  $element['date']['#default_value'] = is_object($date) ? date_format_date($date , 'custom', $element['#date_format']) : '';
   $element['date']['#attributes'] = array('class' => (isset($element['#attributes']['class']) ? $element['#attributes']['class'] : '') .' date-date');
-  $element['date']['#description'] = ' '. t('Format: @date', array('@date' => date($element['#date_format'], time())));
+  $element['date']['#description'] = ' '. t('Format: @date', array('@date' => date_format_date(date_now(), 'custom', $element['#date_format'])));
   
   // Keep the system from creating an error message for the sub-element.
   // We'll set our own message on the parent element.
@@ -193,6 +194,7 @@ function date_select_process($element, $edit, $form_state, $form) {
   elseif (!empty($element['#value'])) {
     $date = date_make_date($element['#value'], $element['#date_timezone'], DATE_DATETIME, $granularity);
   }
+  
   $element['#tree'] = TRUE;
   date_increment_round($date, $element['#date_increment']);
   $element += (array) date_parts_element($element, $date, $element['#date_format']);
@@ -203,7 +205,7 @@ function date_select_process($element, $edit, $form_state, $form) {
   foreach (date_nongranularity($granularity) as $field) {
     if ($field != 'timezone') {
       $element[$field] = array(
-        '#type' => 'hidden',
+        '#type' => 'value',
         '#value' => 0,
         );
     }
@@ -214,6 +216,7 @@ function date_select_process($element, $edit, $form_state, $form) {
   else {
     $element['#element_validate'] = array('date_select_validate');
   }
+
   return $element;
 }
 
@@ -328,12 +331,15 @@ function date_parts_element($element, $date, $format) {
         $sub_element[$field]['#title'] = $label;
       }
     }
-  }
  
-  // Views exposed filters are treated as submitted even if not,
-  // so force the #default value in that case.  
-  if (!empty($element[$field]['#force_value'])) {
-    $sub_element[$field]['#value'] = $sub_element[$field]['#default_value'];
+    // Views exposed filters are treated as submitted even if not,
+    // so force the #default value in that case. Make sure we set
+    // a default that is in the option list.
+    if (!empty($element['#force_value'])) {
+      $options = $sub_element[$field]['#options'];
+      $default = !empty($sub_element[$field]['#default_value']) ? $sub_element[$field]['#default_value'] : array_shift($options);
+      $sub_element[$field]['#value'] = $default;
+    }
   }
   
   if (($hours_format == 'g' || $hours_format == 'h') && date_has_time($granularity)) {
@@ -351,6 +357,7 @@ function date_parts_element($element, $date, $format) {
       $sub_element['ampm']['#title'] = theme('date_part_label_ampm', 'ampm', $element);
     }
   }
+
   return $sub_element;
 }
 
@@ -469,7 +476,6 @@ function date_select_validate($element, &$form_state) {
     array_unshift($errors, t('Field %field has errors.', array('%field' => $label)));
     form_set_error($error_field, implode(' ', $errors));
   }
-  
   // If there are no errors and the value is valid, set it.
   if (empty($errors) && !empty($value)) {
     form_set_value($element, $value, $form_state);

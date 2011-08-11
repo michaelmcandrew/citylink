@@ -1,5 +1,5 @@
 <?php
-//$Id: date_api.views.inc,v 1.1.2.10 2009/04/30 11:29:59 karens Exp $
+//$Id: date_api.views.inc,v 1.1.2.12 2010/08/12 14:13:59 karens Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ function date_api_views_data() {
       'help' => t('Filter any Views !base_table date field by a date argument, using any common ISO date/period format (i.e. YYYY, YYYY-MM, YYYY-MM-DD, YYYY-W99, YYYY-MM-DD--P3M, P90D, etc).', array('!base_table' => $base_table)),
       'argument' => array(
         'handler' => 'date_api_argument_handler',
-        'empty name field' => t('Undated'),
+        'empty field name' => t('Undated'),
         'base' => $base_table,
       ),
     );  
@@ -143,7 +143,7 @@ function date_api_views_data() {
       'help' => t('Filter any Views !base_table date field.', array('!base_table' => $base_table)),
       'filter' => array(
         'handler' => 'date_api_filter_handler',
-        'empty name field' => t('Undated'),
+        'empty field name' => t('Undated'),
         'base' => $base_table,
       ),
     ); 
@@ -154,7 +154,7 @@ function date_api_views_data() {
 /**
  *  Identify all potential date/timestamp fields and cache the data.
  */
-function date_api_fields($base = 'node', $reset = TRUE) {
+function date_api_fields($base = 'node', $reset = FALSE) {
   static $fields = array();
   $empty = array('name' => array(), 'alias' => array());
   require_once('./'. drupal_get_path('module', 'date_api') .'/includes/date_api_fields.inc');
