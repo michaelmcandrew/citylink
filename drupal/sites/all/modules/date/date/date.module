@@ -1,5 +1,5 @@
 <?php
-// $Id: date.module,v 1.61.2.4.2.56 2009/05/11 02:23:56 karens Exp $
+// $Id: date.module,v 1.61.2.4.2.74 2010/11/29 18:22:00 karens Exp $
 
 /**
  * @file
@@ -15,6 +15,7 @@ function date_init() {
     require_once('./'. drupal_get_path('module', 'date') .'/date_token.inc');
   }
 }
+
 /**
  * Implementation of hook_menu().
  */
@@ -73,7 +74,7 @@ function date_repeat_fields($type_name) {
 }
 
 function date_repeat_page($node) {
-  drupal_set_title($node->title);
+  drupal_set_title(check_plain($node->title));
   $node->date_repeat_show_all = TRUE;
   $node->build_mode = NODE_BUILD_NORMAL;
   $node->content = array();
@@ -197,6 +198,18 @@ function date_widget_info() {
   return $info;
 }
 
+function date_default_format($type) {
+  if (stristr($type, 'date_popup') && module_exists('date_popup')) {
+    $formats = date_popup_formats();
+    $default_format = array_shift($formats);
+  }
+  else {
+    // example input formats must show all possible date parts, so add seconds.
+    $default_format = str_replace('i', 'i:s', variable_get('date_format_short', 'm/d/Y - H:i'));
+  }
+  return $default_format;
+}
+
 function date_input_value($field, $element) {
   switch ($field['widget']['type']) {
     case 'date_text':
@@ -264,8 +277,6 @@ function date_theme() {
       'arguments' => array('date' => NULL, 'timezone' => NULL)),
     'date_display_range' => array(
       'arguments' => array('date1' => NULL, 'date2' => NULL, 'timezone' => NULL)),
-    'date_time_ago' => array(
-      'arguments' => array('start_date' => NULL, 'end_date' => NULL)),  
     'date_text_parts' => array(
       'arguments' => array('element' => NULL)),
     'date' => array(
@@ -276,6 +287,9 @@ function date_theme() {
     'date_formatter_format_interval' => $base + array(
       'arguments' => array('element' => NULL), 
       'function' => 'theme_date_format_interval'),
+    'date_formatter_format_calendar_day' => $base + array(
+      'arguments' => array('element' => NULL), 
+      'function' => 'theme_date_format_calendar_day'),
     'date_repeat_display' => $base + array(
       'arguments' => array('field' => NULL, 
       'item' => NULL, 'node' => NULL, 'dates' => NULL),
@@ -365,7 +379,16 @@ function date_formatter_process($element) {
       if (is_object($date)) {
         if ($format == 'format_interval') {
            $dates[$processed]['interval'] = date_format_interval($date);
+        }
+        elseif ($format == 'format_calendar_day') {
+           $dates[$processed]['calendar_day'] = date_format_calendar_day($date);
         } 
+        elseif ($format == 'U') {
+          $dates[$processed]['formatted'] = date_format_date($date, 'custom', $format);
+          $dates[$processed]['formatted_date'] = date_format_date($date, 'custom', $format);
+          $dates[$processed]['formatted_time'] = '';
+          $dates[$processed]['formatted_timezone'] = '';
+        }
         elseif (!empty($format)) {
           $dates[$processed]['formatted'] = date_format_date($date, 'custom', $format);
           $dates[$processed]['formatted_date'] = date_format_date($date, 'custom', date_limit_format($format, array('year', 'month', 'day')));
@@ -434,10 +457,7 @@ function date_help($path, $arg) {
  * Make sure date information gets updated.
  */
 function date_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'views_edit_view') {
-    cache_clear_all('date_', 'cache', '*');
-  }
-  elseif ($form_id == 'content_display_overview_form') {
+  if ($form_id == 'content_display_overview_form') {
     date_content_display_form($form, $form_state);
   }
 }
@@ -453,9 +473,11 @@ function date_field($op, &$node, $field, &$items, $teaser, $page) {
   $additions[$field['field_name']] = $items;
   foreach ($items as $delta => $item) {
     $timezone = isset($item['timezone']) ? $item['timezone'] : '';
-    $additions[$field['field_name']][$delta]['timezone'] = date_get_timezone($field['tz_handling'], $timezone);
-    $additions[$field['field_name']][$delta]['timezone_db'] = date_get_timezone_db($field['tz_handling']);
-    $additions[$field['field_name']][$delta]['date_type'] = $field['type'];
+    if (is_array($additions[$field['field_name']][$delta])) {
+      $additions[$field['field_name']][$delta]['timezone'] = date_get_timezone($field['tz_handling'], $timezone);
+      $additions[$field['field_name']][$delta]['timezone_db'] = date_get_timezone_db($field['tz_handling']);
+      $additions[$field['field_name']][$delta]['date_type'] = $field['type'];
+    }
   }
   switch ($op) {
     case 'load':
@@ -467,11 +489,14 @@ function date_field($op, &$node, $field, &$items, $teaser, $page) {
       return _date_field_validate($op, $node, $field, $items, $teaser, $page);
       break;
 
+    case 'presave':
     case 'insert':
     case 'update':
-      require_once('./'. drupal_get_path('module', 'date') .'/date_elements.inc');
+      require_once('./'. drupal_get_path('module', 'date') .'/date_elements.inc');     
       $items = $additions[$field['field_name']];
-      $node->$field['field_name'] = $additions;
+      if ($additions[$field['field_name']]) {
+        $node->$field['field_name'] = $additions;
+      }
       return _date_field_update($op, $node, $field, $items, $teaser, $page);
       break;
 
@@ -550,8 +575,9 @@ function date_formatter_format($formatter, $field_name) {
       $format = variable_get('date_format_'. $formatter, $default);
       break;
   }
+ 
   if (empty($format)) {
-    $format = $default_format;
+    $format = $default;
   }
   // A selected format might include timezone information.
   $granularity = date_granularity($field);
@@ -573,15 +599,7 @@ function date_views_api() {
  * Helper function to adapt node date fields to formatter settings.
  */
 function date_prepare_node($node, $field, $type_name, $context, $options) {
-  static $prepared_node = array();
   
-  // No need to do this over and over for every item in a normal node view.
-  if (empty($node->view) && isset($node->content) && !empty($prepared_node) && 
-    array_key_exists($field['field_name'], $prepared_node) && 
-    $prepared_node[$field['field_name']]->nid == $node->nid) {
-    return $prepared_node[$field['field_name']];
-  }
-    
   // If there are options to limit multiple values, 
   // alter the node values to match. 
   $field_name = $field['field_name'];
@@ -591,7 +609,6 @@ function date_prepare_node($node, $field, $type_name, $context, $options) {
   // If no results should be shown, empty the values and return.
   if (is_numeric($max_count) && $max_count == 0) {
     $node->{$field_name} = array();
-    $prepared_node[$field_name] = $node;
     return $node;
   }
   
@@ -632,7 +649,6 @@ function date_prepare_node($node, $field, $type_name, $context, $options) {
       }
     }
   }
-  $prepared_node[$field['field_name']] = $node;
   return $node;
 }
 
@@ -842,4 +858,31 @@ function date_formatter_get_settings($field_name, $type_name, $context) {
   $options['multiple']['multiple_to'] = variable_get($value .'_multiple_to', '');
   $options['fromto']['fromto'] = variable_get($value .'_fromto', 'both');  
   return $options;
+}
+
+/**
+ * Determine if a from/to date combination qualify as 'All day'.
+ *
+ * @param array $field, the field definition for this date field.
+ * @param object $date1, a date/time object for the 'from' date.
+ * @param object $date2, a date/time object for the 'to' date.
+ * @return TRUE or FALSE.
+ */
+function date_field_all_day($field, $date1, $date2 = NULL) {
+  if (empty($date1) || !is_object($date1)) {
+    return FALSE;
+  }
+  elseif (!date_has_time($field['granularity'])) {
+    return FALSE;
+  }
+  if (empty($date2)) {
+    $date2 = $date1;
+  }
+  $granularity = $field['granularity'];
+  $granularity = array_pop($granularity);
+  $increment = isset($field['widget']['increment']) ? $field['widget']['increment'] : 1;
+  $date1 = date_format($date1, DATE_FORMAT_DATETIME);
+  $date2 = date_format($date2, DATE_FORMAT_DATETIME);
+  return date_is_all_day($date1, $date2, $granularity, $increment);
+
 }

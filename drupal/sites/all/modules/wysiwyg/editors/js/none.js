@@ -1,4 +1,4 @@
-// $Id: none.js,v 1.6 2009/05/17 00:13:21 sun Exp $
+(function($) {
 
 /**
  * Attach this editor to a target element.
@@ -68,3 +68,5 @@ Drupal.wysiwyg.editor.instance.none = {
     }
   }
 };
+
+})(jQuery);
