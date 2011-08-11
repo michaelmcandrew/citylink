@@ -1,6 +1,4 @@
 <?php
-// $Id: node.tpl.php,v 1.4 2008/09/15 08:11:49 johnalbin Exp $
-
 /**
  * @file node.tpl.php
  *
@@ -62,7 +60,7 @@
     <div class="unpublished"><?php print t('Unpublished'); ?></div>
   <?php endif; ?>
 
-  <?php if ($submitted or $terms): ?>
+  <?php if ($submitted || $terms): ?>
     <div class="meta">
       <?php if ($submitted): ?>
         <div class="submitted">
