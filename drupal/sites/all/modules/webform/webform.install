@@ -1276,7 +1276,7 @@ function webform_update_6321() {
   $ret = array();
   db_add_field($ret, 'webform', 'block', array('type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0));
   db_change_field($ret, 'webform', 'redirect_url', 'redirect_url', array('type' => 'varchar', 'length' => 255, 'default' => '<confirmation>'));
-  update_sql("UPDATE {webform} SET redirect_url = '<confirmation>' WHERE redirect_url = ''");
+  update_sql("UPDATE {webform} SET redirect_url = '<confirmation>' WHERE redirect_url = '' OR redirect_url IS NULL");
   return $ret;
 }
 
@@ -1350,6 +1350,36 @@ function webform_update_6327() {
   $ret = array();
   variable_del('node_types');
   variable_del('components');
+  return $ret;
+}
+
+/**
+ * Convert the Date component start and end year options to start and end date.
+ */
+function webform_update_6328() {
+  $ret = array();
+
+  $result = db_query("SELECT * FROM {webform_component} WHERE type = 'date'");
+  while ($component = db_fetch_array($result)) {
+    $component['extra'] = unserialize($component['extra']);
+    if (!isset($component['extra']['start_date']) && !isset($component['end_date'])) {
+      foreach (array('year_start' => 'start_date', 'year_end' => 'end_date') as $key => $replacement) {
+        $value = isset($component['extra'][$key]) ? trim($component['extra'][$key]) : '';
+        // Relative years.
+        if (preg_match('/[-+][ ]*[0-9]+/', $value)) {
+          $component['extra'][$replacement] = ($value == 1) ? ($value . ' year') : ($value . ' years');
+        }
+        // Absolute years.
+        elseif (is_numeric($value)) {
+          $component['extra'][$replacement] = 'Dec 31 ' . $value;
+        }
+        unset($component['extra'][$key]);
+      }
+      $component['extra'] = serialize($component['extra']);
+      drupal_write_record('webform_component', $component, array('nid', 'cid'));
+    }
+  }
+
   return $ret;
 }
 
